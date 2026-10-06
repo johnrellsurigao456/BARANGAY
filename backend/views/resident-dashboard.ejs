@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resident dashboard — Barangay Eco Care</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><%- include('partials/brand') %> Eco Care</div>
+    <nav class="side-nav">
+      <button class="active" data-view="overview">Overview</button>
+      <button data-view="report">Submit report</button>
+      <button data-view="history">My reports</button>
+      <button data-view="rewards">Rewards</button>
+      <button data-view="activities">Activities</button>
+      <button data-view="profile">Profile</button>
+    </nav>
+    <div class="side-foot">
+      <button id="logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Overview</h1>
+        <p><%= currentUser.barangay %> &middot; Resident</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="bell-btn" id="bell-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="bell-dot" id="bell-dot"></span>
+        </button>
+        <div class="user-chip">
+          <div class="avatar"><%= currentUser.first_name[0] %><%= currentUser.last_name[0] %></div>
+          <%= currentUser.first_name %> <%= currentUser.last_name %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <section class="view active" id="overview">
+      <div class="stat-grid" id="overview-stats">
+        <div class="stat-card"><div class="label">Total reports</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Pending reports</div><div class="value amber">—</div></div>
+        <div class="stat-card"><div class="label">Verified / resolved</div><div class="value teal">—</div></div>
+        <div class="stat-card"><div class="label">Current points</div><div class="value teal">—</div></div>
+      </div>
+
+      <div class="panel-row">
+        <div class="panel">
+          <h2>Recent reports</h2>
+          <div class="table-wrap"><table class="data" id="recent-reports-table">
+            <tr><th>Report ID</th><th>Type</th><th>Location</th><th>Date</th><th>Status</th></tr>
+          </table></div>
+          <div class="empty-state" id="recent-reports-empty" style="display:none;">You have no reports yet. Submit your first report to get started.</div>
+        </div>
+        <div class="panel">
+          <h2>Quick actions</h2>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <button class="btn btn-primary btn-full" data-goto="report">Submit waste report</button>
+            <button class="btn btn-ghost btn-full" data-goto="history">View my reports</button>
+            <button class="btn btn-ghost btn-full" data-goto="rewards">View rewards</button>
+            <button class="btn btn-ghost btn-full" data-goto="activities">Community activities</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Submit report -->
+    <section class="view" id="report">
+      <div class="panel" style="max-width:560px;">
+        <h2>Submit a waste or environmental report</h2>
+        <div id="report-alert" class="form-alert error"></div>
+        <form class="form-grid" id="report-form">
+          <div class="field">
+            <label for="r-type">Report type</label>
+            <select id="r-type" name="report_type" required>
+              <option value="">Select a type</option>
+              <option>Waste Concern</option>
+              <option>Environmental Hazard</option>
+              <option>Other Environmental Concern</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-category">Waste category</label>
+            <select id="r-category" name="waste_category" required>
+              <option value="">Select a category</option>
+              <option>Improper Waste Disposal</option>
+              <option>Illegal Dumping</option>
+              <option>Uncollected Waste</option>
+              <option>Overflowing Garbage</option>
+              <option>Burning of Waste</option>
+              <option>Blocked Drainage</option>
+              <option>Other Environmental Concern</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-location">Location</label>
+            <input id="r-location" name="location" type="text" placeholder="Purok 3, near the chapel" required />
+          </div>
+          <div class="field">
+            <label for="r-datetime">Date / time noticed</label>
+            <input id="r-datetime" name="incident_datetime" type="datetime-local" required />
+          </div>
+          <div class="field">
+            <label for="r-description">Description</label>
+            <textarea id="r-description" name="description" rows="4" placeholder="Describe what you noticed" required></textarea>
+          </div>
+          <div class="field">
+            <label for="r-photo">Photo (optional, JPG/PNG/WEBP, max 5MB)</label>
+            <input id="r-photo" name="photo" type="file" accept=".jpg,.jpeg,.png,.webp" />
+          </div>
+          <div class="field">
+            <label for="r-notes">Additional notes (optional)</label>
+            <textarea id="r-notes" name="additional_notes" rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="report-submit">Submit report</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- My reports -->
+    <section class="view" id="history">
+      <div class="panel">
+        <h2>My reports</h2>
+        <div class="table-wrap"><table class="data" id="history-table">
+          <tr><th>Report ID</th><th>Type</th><th>Location</th><th>Date</th><th>Status</th><th></th></tr>
+        </table></div>
+        <div class="empty-state" id="history-empty" style="display:none;">No waste reports found.</div>
+      </div>
+    </section>
+
+    <!-- Rewards -->
+    <section class="view" id="rewards">
+      <div class="stat-grid" id="points-stats">
+        <div class="stat-card"><div class="label">Current points</div><div class="value teal">—</div></div>
+        <div class="stat-card"><div class="label">Total earned</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Total redeemed</div><div class="value">—</div></div>
+      </div>
+      <div class="panel">
+        <h2>Available rewards</h2>
+        <div class="card-grid" id="rewards-grid"></div>
+        <div class="empty-state" id="rewards-empty" style="display:none;">No available rewards at the moment.</div>
+      </div>
+      <div class="panel">
+        <h2>Redemption history</h2>
+        <div class="table-wrap"><table class="data" id="redemptions-table">
+          <tr><th>Redemption ID</th><th>Reward</th><th>Points used</th><th>Status</th><th>Date</th></tr>
+        </table></div>
+        <div class="empty-state" id="redemptions-empty" style="display:none;">You haven't redeemed any rewards yet.</div>
+      </div>
+    </section>
+
+    <!-- Activities -->
+    <section class="view" id="activities">
+      <div class="panel">
+        <h2>Community activities</h2>
+        <div class="card-grid" id="activities-grid"></div>
+        <div class="empty-state" id="activities-empty" style="display:none;">No activities scheduled at the moment.</div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="view" id="profile">
+      <div class="panel" style="max-width:560px;">
+        <h2>Profile information</h2>
+        <div id="profile-alert" class="form-alert error"></div>
+        <form class="form-grid" id="profile-form">
+          <div class="field-row">
+            <div class="field"><label for="p-first">First name</label><input id="p-first" name="first_name" required /></div>
+            <div class="field"><label for="p-last">Last name</label><input id="p-last" name="last_name" required /></div>
+          </div>
+          <div class="field"><label>Email</label><input id="p-email" disabled /></div>
+          <div class="field"><label for="p-mobile">Mobile number</label><input id="p-mobile" name="mobile_number" required /></div>
+          <div class="field"><label for="p-address">Address</label><input id="p-address" name="address" required /></div>
+          <button type="submit" class="btn btn-primary">Update profile</button>
+        </form>
+      </div>
+
+      <div class="panel" style="max-width:560px;">
+        <h2>Change password</h2>
+        <div id="password-alert" class="form-alert error"></div>
+        <form class="form-grid" id="password-form">
+          <div class="field"><label for="cp-current">Current password</label><input id="cp-current" name="current_password" type="password" required /></div>
+          <div class="field"><label for="cp-new">New password</label><input id="cp-new" name="new_password" type="password" required /></div>
+          <div class="field"><label for="cp-confirm">Confirm new password</label><input id="cp-confirm" name="confirm_password" type="password" required /></div>
+          <button type="submit" class="btn btn-ghost">Change password</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Notifications panel -->
+<div class="modal-overlay" id="notif-overlay">
+  <div class="modal-box" style="max-width:380px; text-align:left;">
+    <h3>Notifications</h3>
+    <div id="notif-list" style="max-height:340px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; margin-bottom:16px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" id="notif-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Redeem confirmation modal -->
+<div class="modal-overlay" id="redeem-overlay">
+  <div class="modal-box">
+    <h3>Confirm redemption</h3>
+    <p id="redeem-text"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" id="redeem-cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="redeem-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/resident.js"></script>
+</body>
+</html>

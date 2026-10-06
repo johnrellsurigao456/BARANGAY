@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff dashboard — Barangay Eco Care</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><%- include('partials/brand') %> Eco Care</div>
+    <nav class="side-nav">
+      <button class="active" data-view="overview">Overview</button>
+      <button data-view="reports">Verify reports</button>
+      <button data-view="residents">Residents</button>
+      <button data-view="rewards">Rewards</button>
+      <button data-view="activities">Activities</button>
+      <button data-view="analytics">Analytics</button>
+    </nav>
+    <div class="side-foot">
+      <button id="logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Overview</h1>
+        <p><%= currentUser.barangay %> &middot; Barangay staff</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="user-chip">
+          <div class="avatar"><%= currentUser.first_name[0] %><%= currentUser.last_name[0] %></div>
+          <%= currentUser.first_name %> <%= currentUser.last_name %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <section class="view active" id="overview">
+      <div class="stat-grid" id="overview-stats">
+        <div class="stat-card"><div class="label">Total residents</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Total reports</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Pending reports</div><div class="value amber">—</div></div>
+        <div class="stat-card"><div class="label">Resolved reports</div><div class="value teal">—</div></div>
+      </div>
+      <div class="panel">
+        <h2>Reports needing attention</h2>
+        <div class="table-wrap"><table class="data" id="attention-table">
+          <tr><th>Resident</th><th>Type</th><th>Location</th><th>Status</th></tr>
+        </table></div>
+        <div class="empty-state" id="attention-empty" style="display:none;">No waste reports found.</div>
+      </div>
+    </section>
+
+    <!-- Verify reports -->
+    <section class="view" id="reports">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 style="margin:0;">All resident reports</h2>
+          <select id="status-filter" style="width:auto; padding:8px 12px; border:1.5px solid var(--border-strong); border-radius:8px; background:var(--surface-2); color:var(--ink); font-size:13.5px;">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="under_review">Under review</option>
+            <option value="verified">Verified</option>
+            <option value="resolved">Resolved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table class="data" id="reports-table">
+          <tr><th>Report ID</th><th>Resident</th><th>Type</th><th>Location</th><th>Date</th><th>Status</th><th></th></tr>
+        </table></div>
+        <div class="empty-state" id="reports-empty" style="display:none;">No waste reports found.</div>
+      </div>
+    </section>
+
+    <!-- Residents -->
+    <section class="view" id="residents">
+      <div class="panel">
+        <h2>Registered residents</h2>
+        <div class="table-wrap"><table class="data" id="residents-table">
+          <tr><th>Name</th><th>Mobile</th><th>Address</th><th>Reports</th><th>Points balance</th></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Rewards -->
+    <section class="view" id="rewards">
+      <div class="panel">
+        <h2>Rewards catalog</h2>
+        <div class="card-grid" id="rewards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Activities -->
+    <section class="view" id="activities">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 style="margin:0;">Community activities</h2>
+          <button class="btn btn-primary btn-sm" id="new-activity-btn">New activity</button>
+        </div>
+        <div class="card-grid" id="activities-grid"></div>
+      </div>
+    </section>
+
+    <!-- Analytics -->
+    <section class="view" id="analytics">
+      <div class="panel">
+        <h2>Reports by category</h2>
+        <div id="chart-category"></div>
+      </div>
+      <div class="panel">
+        <h2>Reports by status</h2>
+        <div id="chart-status"></div>
+      </div>
+      <div class="panel">
+        <h2>Monthly reports</h2>
+        <div id="chart-monthly"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Report detail / verify modal -->
+<div class="modal-overlay" id="report-overlay">
+  <div class="modal-box" style="max-width:460px; text-align:left;">
+    <h3 id="rm-title">Report detail</h3>
+    <div id="rm-body" style="font-size:14px; color:var(--ink-soft); margin-bottom:16px;"></div>
+    <div class="field">
+      <label for="rm-response">Response / comments</label>
+      <textarea id="rm-response" rows="3"></textarea>
+    </div>
+    <div class="modal-actions" style="flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" id="rm-close">Close</button>
+      <button class="btn btn-danger btn-sm" id="rm-reject">Reject</button>
+      <button class="btn btn-ghost btn-sm" id="rm-review">Under review</button>
+      <button class="btn btn-primary btn-sm" id="rm-verify">Verify</button>
+      <button class="btn btn-primary btn-sm" id="rm-resolve">Resolve</button>
+    </div>
+  </div>
+</div>
+
+<!-- New activity modal -->
+<div class="modal-overlay" id="activity-overlay">
+  <div class="modal-box" style="max-width:440px; text-align:left;">
+    <h3>New activity</h3>
+    <form id="activity-form" class="form-grid">
+      <div class="field"><label>Title</label><input name="title" required /></div>
+      <div class="field"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+      <div class="field"><label>Date</label><input type="date" name="activity_date" required /></div>
+      <div class="field"><label>Time</label><input type="time" name="activity_time" /></div>
+      <div class="field"><label>Location</label><input name="location" /></div>
+      <div class="field"><label>Organizer</label><input name="organizer" value="Barangay San Isidro" /></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="activity-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/staff.js"></script>
+</body>
+</html>

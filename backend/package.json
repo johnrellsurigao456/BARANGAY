@@ -1,0 +1,22 @@
+{
+  "name": "barangayecocare-backend",
+  "version": "1.0.0",
+  "description": "Barangay Eco Care - Waste Management, Reporting, Rewards and Community Engagement System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "better-sqlite3": "^11.3.0",
+    "bcryptjs": "^2.4.3",
+    "multer": "^1.4.5-lts.1",
+    "express-validator": "^7.2.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "helmet": "^7.1.0",
+    "connect-sqlite3": "^0.9.13"
+  }
+}

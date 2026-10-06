@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin dashboard — Barangay Eco Care</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><%- include('partials/brand') %> Eco Care</div>
+    <nav class="side-nav">
+      <button class="active" data-view="overview">Overview</button>
+      <button data-view="users">User management</button>
+      <button data-view="staff">Staff management</button>
+      <button data-view="rewards">Reward management</button>
+      <button data-view="settings">System settings</button>
+      <button data-view="audit">Audit logs</button>
+    </nav>
+    <div class="side-foot">
+      <button id="logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Overview</h1>
+        <p>Barangay Eco Care &middot; Administrator</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="user-chip">
+          <div class="avatar"><%= currentUser.first_name[0] %><%= currentUser.last_name[0] %></div>
+          <%= currentUser.first_name %> <%= currentUser.last_name %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <section class="view active" id="overview">
+      <div class="stat-grid" id="overview-stats">
+        <div class="stat-card"><div class="label">Total users</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Residents</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Staff</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Total reports</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Pending reports</div><div class="value amber">—</div></div>
+        <div class="stat-card"><div class="label">Resolved reports</div><div class="value teal">—</div></div>
+        <div class="stat-card"><div class="label">Total rewards</div><div class="value">—</div></div>
+        <div class="stat-card"><div class="label">Total redemptions</div><div class="value">—</div></div>
+      </div>
+    </section>
+
+    <!-- User management -->
+    <section class="view" id="users">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
+          <h2 style="margin:0;">All users</h2>
+          <div style="display:flex; gap:10px;">
+            <input id="user-search" placeholder="Search name, email, username" style="padding:9px 12px; border:1.5px solid var(--border-strong); border-radius:8px; background:var(--surface-2); color:var(--ink); font-size:13.5px;" />
+            <select id="role-filter" style="padding:9px 12px; border:1.5px solid var(--border-strong); border-radius:8px; background:var(--surface-2); color:var(--ink); font-size:13.5px;">
+              <option value="">All roles</option>
+              <option value="resident">Resident</option>
+              <option value="staff">Staff</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap"><table class="data" id="users-table">
+          <tr><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Staff management -->
+    <section class="view" id="staff">
+      <div class="panel" style="max-width:480px;">
+        <h2>Create staff account</h2>
+        <div id="staff-alert" class="form-alert error"></div>
+        <form class="form-grid" id="staff-form">
+          <div class="field-row">
+            <div class="field"><label>First name</label><input name="first_name" required /></div>
+            <div class="field"><label>Last name</label><input name="last_name" required /></div>
+          </div>
+          <div class="field"><label>Username</label><input name="username" required /></div>
+          <div class="field"><label>Email</label><input name="email" type="email" required /></div>
+          <div class="field"><label>Mobile number</label><input name="mobile_number" placeholder="09171234567" required /></div>
+          <div class="field"><label>Address</label><input name="address" required /></div>
+          <div class="field"><label>Temporary password</label><input name="password" type="password" required /></div>
+          <button type="submit" class="btn btn-primary">Create staff account</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Current staff</h2>
+        <div class="table-wrap"><table class="data" id="staff-table">
+          <tr><th>Name</th><th>Email</th><th>Status</th><th></th></tr>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Reward management -->
+    <section class="view" id="rewards">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 style="margin:0;">Rewards catalog</h2>
+          <button class="btn btn-primary btn-sm" id="new-reward-btn">Add reward</button>
+        </div>
+        <div class="card-grid" id="rewards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="view" id="settings">
+      <div class="panel" style="max-width:480px;">
+        <h2>Barangay information</h2>
+        <div id="settings-alert" class="form-alert error"></div>
+        <form class="form-grid" id="settings-form">
+          <div class="field"><label>Barangay name</label><input name="barangay_name" required /></div>
+          <div class="field"><label>Contact email</label><input name="contact_email" type="email" /></div>
+          <div class="field"><label>Contact number</label><input name="contact_number" /></div>
+          <button type="submit" class="btn btn-primary">Save settings</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Audit logs -->
+    <section class="view" id="audit">
+      <div class="panel">
+        <h2>Audit logs</h2>
+        <div class="table-wrap"><table class="data" id="audit-table">
+          <tr><th>Date</th><th>By</th><th>Action</th><th>Details</th></tr>
+        </table></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Reward modal -->
+<div class="modal-overlay" id="reward-overlay">
+  <div class="modal-box" style="max-width:420px; text-align:left;">
+    <h3 id="reward-modal-title">Add reward</h3>
+    <form id="reward-form" class="form-grid">
+      <input type="hidden" name="id" />
+      <div class="field"><label>Name</label><input name="name" required /></div>
+      <div class="field"><label>Description</label><textarea name="description" rows="2"></textarea></div>
+      <div class="field"><label>Points required</label><input name="points_required" type="number" min="1" required /></div>
+      <div class="field"><label>Quantity available</label><input name="quantity_available" type="number" min="0" required /></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="reward-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

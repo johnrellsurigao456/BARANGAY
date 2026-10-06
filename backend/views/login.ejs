@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log in — Barangay Eco Care</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-side">
+    <div class="brand"><%- include('partials/brand') %> Barangay Eco Care</div>
+    <div>
+      <p class="quote">"Every report logged and every point earned stays on one record, for the whole barangay to see."</p>
+      <p class="quote-by">Waste, rewards, and reporting — in one portal.</p>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="login-form-col">
+    <div class="login-box">
+      <h1>Welcome back</h1>
+      <p class="sub">Log in to your Barangay Eco Care account.</p>
+
+      <div id="form-alert" class="form-alert error"></div>
+
+      <form id="login-form" novalidate>
+        <div class="field" id="f-email">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" placeholder="johnrell@email.com" required />
+          <div class="field-error">Please enter a valid email address.</div>
+        </div>
+
+        <div class="field password-field" id="f-password">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password" required />
+          <button type="button" class="password-toggle" data-toggle="password">Show</button>
+          <div class="field-error">Password is required.</div>
+        </div>
+
+        <div class="login-meta">
+          <label><input type="checkbox" name="remember" /> Remember me</label>
+          <a href="#" id="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="login-submit">Log in</button>
+      </form>
+
+      <p class="signup-note">New here? <a href="/signup">Create an account</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

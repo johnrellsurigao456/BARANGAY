@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create account — Barangay Eco Care</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="login-side">
+    <div class="brand"><%- include('partials/brand') %> Barangay Eco Care</div>
+    <div>
+      <p class="quote">"One account to report concerns, track points, and see what your barangay is doing about both."</p>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="login-form-col">
+    <div class="login-box" style="max-width:460px;">
+      <h1>Create your account</h1>
+      <p class="sub">Register as a resident. Staff and admin access is assigned by the barangay.</p>
+
+      <div id="form-alert" class="form-alert error"></div>
+
+      <form id="signup-form" novalidate>
+        <div class="field-row">
+          <div class="field" id="f-first_name">
+            <label for="first_name">First name</label>
+            <input id="first_name" name="first_name" type="text" placeholder="John" required />
+            <div class="field-error">First name is required.</div>
+          </div>
+          <div class="field" id="f-last_name">
+            <label for="last_name">Last name</label>
+            <input id="last_name" name="last_name" type="text" placeholder="Rell" required />
+            <div class="field-error">Last name is required.</div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field" id="f-middle_name">
+            <label for="middle_name">Middle name <span style="color:var(--ink-muted);">(optional)</span></label>
+            <input id="middle_name" name="middle_name" type="text" placeholder="Villaver" />
+          </div>
+          <div class="field" id="f-suffix">
+            <label for="suffix">Suffix <span style="color:var(--ink-muted);">(optional)</span></label>
+            <input id="suffix" name="suffix" type="text" placeholder="Jr., III" />
+          </div>
+        </div>
+
+        <div class="field" id="f-username">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="johnrell" required />
+          <div class="field-error">Username must be at least 3 characters (letters, numbers, dots, underscores).</div>
+        </div>
+
+        <div class="field" id="f-email">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" placeholder="johnrell@email.com" required />
+          <div class="field-error">Please enter a valid email address.</div>
+        </div>
+
+        <div class="field" id="f-mobile_number">
+          <label for="mobile_number">Mobile number</label>
+          <input id="mobile_number" name="mobile_number" type="text" placeholder="09171234567" required />
+          <div class="field-error">Please enter a valid Philippine mobile number (e.g. 09171234567).</div>
+        </div>
+
+        <div class="field" id="f-address">
+          <label for="address">Complete address</label>
+          <input id="address" name="address" type="text" placeholder="Purok 3, San Isidro" required />
+          <div class="field-error">Complete address is required.</div>
+        </div>
+
+        <div class="field" id="f-barangay">
+          <label for="barangay">Barangay</label>
+          <input id="barangay" name="barangay" type="text" placeholder="San Isidro" required value="San Isidro" />
+          <div class="field-error">Barangay is required.</div>
+        </div>
+
+        <div class="field password-field" id="f-password">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="At least 8 characters, 1 number" required />
+          <button type="button" class="password-toggle" data-toggle="password">Show</button>
+          <div class="field-error">Password must be at least 8 characters and include a number.</div>
+        </div>
+
+        <div class="field password-field" id="f-confirm_password">
+          <label for="confirm_password">Confirm password</label>
+          <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter your password" required />
+          <button type="button" class="password-toggle" data-toggle="confirm_password">Show</button>
+          <div class="field-error">Password confirmation does not match.</div>
+        </div>
+
+        <div class="checkbox-row" id="f-terms">
+          <input type="checkbox" id="terms" name="terms" />
+          <label for="terms">I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a> of Barangay Eco Care.</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="signup-submit">Create account</button>
+      </form>
+
+      <p class="signup-note">Already have an account? <a href="/login">Log in</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>
